@@ -10,6 +10,7 @@ import { MarketingData, WeeklyPerformance  } from '../../src/types/marketing';
 export default function WeeklyView() {
 
   const [marketingData, setMarketingData] = useState<MarketingData | null>(null);
+  const [weekly, setWeekly] = useState<WeeklyPerformance[]>([])
   const [error, setError] = useState<string | null>(null);  
   const [loading, setLoading] = useState(true);
 
@@ -18,6 +19,41 @@ export default function WeeklyView() {
       try {
         const data = await fetchMarketingData();
         setMarketingData(data);
+        
+        // Extract weekly performance data from all campaigns
+        const allWeeklyData: WeeklyPerformance[] = [];
+        data.campaigns.forEach(campaign => {
+          if (campaign.weekly_performance) {
+            allWeeklyData.push(...campaign.weekly_performance);
+          }
+        });
+        
+        // Group by week and aggregate the data
+        const weeklyMap = new Map<string, WeeklyPerformance>();
+        allWeeklyData.forEach(week => {
+          const weekKey = `${week.week_start}-${week.week_end}`;
+          if (weeklyMap.has(weekKey)) {
+            const existing = weeklyMap.get(weekKey)!;
+            weeklyMap.set(weekKey, {
+              week_start: week.week_start,
+              week_end: week.week_end,
+              impressions: existing.impressions + week.impressions,
+              clicks: existing.clicks + week.clicks,
+              conversions: existing.conversions + week.conversions,
+              spend: existing.spend + week.spend,
+              revenue: existing.revenue + week.revenue,
+            });
+          } else {
+            weeklyMap.set(weekKey, { ...week });
+          }
+        });
+        
+        // Convert map to array and sort by week_start
+        const aggregatedWeekly = Array.from(weeklyMap.values()).sort(
+          (a, b) => new Date(a.week_start).getTime() - new Date(b.week_start).getTime()
+        );
+        
+        setWeekly(aggregatedWeekly);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load data');
         console.error('Error loading marketing data:', err);
@@ -28,6 +64,8 @@ export default function WeeklyView() {
 
     loadData();
   }, []);
+
+  
 
   return (
     <div className="flex h-screen bg-gray-900">
@@ -60,15 +98,16 @@ export default function WeeklyView() {
 
         {/* Content Area */}
         <div className="flex-1 p-4 lg:p-6 overflow-y-auto">
-          {!loading && marketingData?.campaigns && (
-            <RevenueSpendLineChart
-              data={marketingData.campaigns.map((campaign: any) => ({
-                // Map/transform campaign fields to WeeklyPerformance fields as needed
-                week_start: campaign.week_start,
-                week_end: campaign.week_end,
-                ...campaign
-              }))}
-            />
+          {!loading && marketingData && weekly.length > 0 && (
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <h2 className="text-2xl font-bold text-gray-800 mb-4">Revenue and Spend by Week</h2>
+              <RevenueSpendLineChart data={weekly} />
+            </div>
+          )}
+          {!loading && marketingData && weekly.length === 0 && (
+            <div className="bg-white rounded-lg shadow-lg p-6 text-center">
+              <p className="text-gray-600">No weekly performance data available.</p>
+            </div>
           )}
         </div>
 

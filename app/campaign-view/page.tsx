@@ -55,16 +55,16 @@ export default function CampaignView() {
     return [...new Set(marketingData.campaigns.map((campaign: Campaign) => campaign.objective))];
   }, [marketingData?.campaigns]);
 
-  if (loading) {
-    return (
-      <div className="flex h-screen bg-gray-900">
-        <Navbar />
-        <div className="flex-1 flex items-center justify-center">
-          <div className="text-white">Loading...</div>
-        </div>
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="flex h-screen bg-gray-900">
+  //       <Navbar />
+  //       <div className="flex-1 flex items-center justify-center">
+  //         <div className="text-white">Loading...</div>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-gray-900">
@@ -77,21 +77,29 @@ export default function CampaignView() {
           <div className="px-4 sm:px-6 lg:px-8">
             <div className="text-center">
               {error ? (
-                <div className="bg-red-900 border border-red-700 text-red-200 px-3 sm:px-4 py-3 rounded mb-4 max-w-2xl mx-auto text-sm sm:text-base">
+                <div className="bg-red-900 border border-red-700 text-red-200 px-4 py-3 rounded mb-4 max-w-2xl mx-auto">
                   Error loading data: {error}
                 </div>
-              ) : (
-                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold">
+              ) : loading ? (
+                <div className="animate-pulse">
+                  <div className="h-10 bg-white/20 rounded mb-4 max-w-md mx-auto"></div>
+                </div>
+              ) : marketingData ? (
+                <h1 className="text-3xl md:text-5xl font-bold">
                   Campaign Performance
                 </h1>
-              )}
+              ) : null}
             </div>
           </div>
         </section>
 
         {/* Content Area */}
         <div className="flex-1 p-3 sm:p-4 lg:p-6 overflow-y-auto w-full max-w-full">
-          {marketingData && (
+        {loading ? (
+          <div className="flex items-center justify-center h-64">
+            <div className="text-white">Loading...</div>
+          </div>
+        ) : marketingData && (
             <>
               {/* Filters Section */}
               <div className="mb-6 sm:mb-8">
