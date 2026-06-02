@@ -97,20 +97,24 @@ export default function WeeklyView() {
         </section>
 
         {/* Content Area */}
-        <div className="flex-1 p-4 lg:p-6 overflow-y-auto">
-          {!loading && marketingData && weekly.length > 0 && (
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">Revenue and Spend by Week</h2>
-              <RevenueSpendLineChart data={weekly} />
+        <div className="flex-1 p-3 sm:p-4 lg:p-6 overflow-y-auto w-full max-w-full">
+          {loading ? (
+            <div className="flex items-center justify-center h-64">
+              <div className="text-white">Loading...</div>
             </div>
-          )}
-          {!loading && marketingData && weekly.length === 0 && (
+          ) : marketingData && weekly.length > 0 ? (
+            <section className="flex-1 p-3 sm:p-4 lg:p-6 overflow-y-auto w-full max-w-full">
+              <div className="bg-white rounded-lg shadow-lg p-6">
+                <h2 className="text-2xl font-bold text-gray-800 mb-4">Revenue and Spend by Week</h2>
+                <RevenueSpendLineChart data={weekly} />
+              </div>
+            </section>
+          ) : marketingData && weekly.length === 0 && (
             <div className="bg-white rounded-lg shadow-lg p-6 text-center">
               <p className="text-gray-600">No weekly performance data available.</p>
             </div>
-          )}
+          )} 
         </div>
-
 
         <Footer />
       </div>

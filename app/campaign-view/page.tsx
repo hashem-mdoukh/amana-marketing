@@ -67,7 +67,7 @@ export default function CampaignView() {
   // }
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen bg-gray-900">
+    <div className="flex h-screen bg-gray-900">
       <Navbar />
       
       {/* Main Content Area */}

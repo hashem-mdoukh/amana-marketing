@@ -78,8 +78,9 @@ export default function DeviceView() {
   }
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+    <div className="flex h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
       <Navbar />
+
       <div className="flex-1 flex flex-col transition-all duration-300 ease-in-out">
         {/* Header */}
         <section className="bg-gradient-to-r from-gray-800 to-gray-700 text-white py-12">
@@ -104,140 +105,140 @@ export default function DeviceView() {
           </div>
         </section>
 
-        {/* Summary Cards */}
-        <div className="flex flex-col md:flex-row gap-6 px-6 py-8 justify-center">
-          {loading ? (
-            <div className="flex items-center justify-center h-64">
-              <div className="text-white">Loading...</div>
-            </div>
-          ) : marketingData ? (
-            summaryCardData.map(({ label, color, device }) => {
-              const data = devicePerformance.find(d => d.device === device);
-              return (
-                <div key={device} className={`flex-1 rounded-xl shadow-lg ${color} p-6 text-white`}>
-                  <h3 className="text-lg font-semibold mb-2">{label}</h3>
-                  <div className="flex flex-wrap gap-4 text-sm">
-                    <div><span className="font-bold">Impressions:</span> {data?.impressions.toLocaleString() ?? '-'}</div>
-                    <div><span className="font-bold">Clicks:</span> {data?.clicks.toLocaleString() ?? '-'}</div>
-                    <div><span className="font-bold">Conversions:</span> {data?.conversions ?? '-'}</div>
-                    <div><span className="font-bold">Spend:</span> ${data?.spend.toLocaleString() ?? '-'}</div>
-                    <div><span className="font-bold">Revenue:</span> ${data?.revenue.toLocaleString() ?? '-'}</div>
-                    <div><span className="font-bold">CTR:</span> {data?.ctr ?? '-'}%</div>
-                    <div><span className="font-bold">Conversion Rate:</span> {data?.conversion_rate ?? '-'}%</div>
-                    <div><span className="font-bold">Traffic %:</span> {data?.percentage_of_traffic ?? '-'}%</div>
+        {/* Content Area */}
+        <main className="flex-1 p-4 lg:p-6 overflow-y-auto">
+          {/* Summary Cards */}
+            <div className="flex flex-col md:flex-row gap-6 px-6 py-8 justify-center">
+                {loading ? (
+                  <div className="flex items-center justify-center h-64">
+                    <div className="text-white">Loading...</div>
                   </div>
-                </div>
-              );
-            })
-          ) :
-          null
-          }
-        </div>
-
-        {/* Charts */}
-        <main className="px-6 py-8 space-y-8">
-          {/* Device Performance Comparison Chart */}
-          {!loading && devicePerformance.length > 0 && (
-            <div className="bg-gray-800 rounded-lg p-6 shadow-lg">
-              <h2 className="text-2xl font-semibold mb-6 text-center text-white">
-                Device Performance Comparison
-              </h2>
-              <ResponsiveContainer width="100%" height={400}>
-                <BarChart data={devicePerformance} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                  <XAxis dataKey="device" stroke="#fff" />
-                  <YAxis stroke="#fff" />
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: '#1f2937', 
-                      border: '1px solid #374151',
-                      borderRadius: '8px',
-                      color: '#fff'
-                    }}
-                    formatter={(value: any, name: string) => [
-                      typeof value === 'number' ? value.toLocaleString() : value,
-                      name
-                    ]}
-                  />
-                  <Legend />
-                  <Bar dataKey="impressions" fill="#3B82F6" name="Impressions" />
-                  <Bar dataKey="clicks" fill="#10B981" name="Clicks" />
-                  <Bar dataKey="conversions" fill="#F59E0B" name="Conversions" />
-                </BarChart>
-              </ResponsiveContainer>
+                ) : marketingData ? (
+                  summaryCardData.map(({ label, color, device }) => {
+                    const data = devicePerformance.find(d => d.device === device);
+                    return (
+                      <div key={device} className={`flex-1 rounded-xl shadow-lg ${color} p-6 text-white`}>
+                        <h3 className="text-lg font-semibold mb-2">{label}</h3>
+                        <div className="flex flex-wrap gap-4 text-sm">
+                          <div><span className="font-bold">Impressions:</span> {data?.impressions.toLocaleString() ?? '-'}</div>
+                          <div><span className="font-bold">Clicks:</span> {data?.clicks.toLocaleString() ?? '-'}</div>
+                          <div><span className="font-bold">Conversions:</span> {data?.conversions ?? '-'}</div>
+                          <div><span className="font-bold">Spend:</span> ${data?.spend.toLocaleString() ?? '-'}</div>
+                          <div><span className="font-bold">Revenue:</span> ${data?.revenue.toLocaleString() ?? '-'}</div>
+                          <div><span className="font-bold">CTR:</span> {data?.ctr ?? '-'}%</div>
+                          <div><span className="font-bold">Conversion Rate:</span> {data?.conversion_rate ?? '-'}%</div>
+                          <div><span className="font-bold">Traffic %:</span> {data?.percentage_of_traffic ?? '-'}%</div>
+                        </div>
+                      </div>
+                    );
+                  })
+                ) :
+                null
+                }
             </div>
-          )}
+          {/* Device Performance Comparison Chart */}
+            {!loading && devicePerformance.length > 0 && (
+              <div className="bg-gray-800 rounded-lg p-6 shadow-lg my-5">
+                <h2 className="text-2xl font-semibold mb-6 text-center text-white">
+                  Device Performance Comparison
+                </h2>
+                <ResponsiveContainer width="100%" height={400}>
+                  <BarChart data={devicePerformance} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                    <XAxis dataKey="device" stroke="#fff" />
+                    <YAxis stroke="#fff" />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: '#1f2937', 
+                        border: '1px solid #374151',
+                        borderRadius: '8px',
+                        color: '#fff'
+                      }}
+                      formatter={(value: any, name: string) => [
+                        typeof value === 'number' ? value.toLocaleString() : value,
+                        name
+                      ]}
+                    />
+                    <Legend />
+                    <Bar dataKey="impressions" fill="#3B82F6" name="Impressions" />
+                    <Bar dataKey="clicks" fill="#10B981" name="Clicks" />
+                    <Bar dataKey="conversions" fill="#F59E0B" name="Conversions" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            )}
 
           {/* Revenue and Spend Comparison */}
-          {!loading && devicePerformance.length > 0 && (
-            <div className="bg-gray-800 rounded-lg p-6 shadow-lg">
-              <h2 className="text-2xl font-semibold mb-6 text-center text-white">
-                Revenue vs Spend by Device
-              </h2>
-              <ResponsiveContainer width="100%" height={400}>
-                <BarChart data={devicePerformance} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                  <XAxis dataKey="device" stroke="#fff" />
-                  <YAxis stroke="#fff" />
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: '#1f2937', 
-                      border: '1px solid #374151',
-                      borderRadius: '8px',
-                      color: '#fff'
-                    }}
-                    formatter={(value: any, name: string) => [
-                      `$${typeof value === 'number' ? value.toLocaleString() : value}`,
-                      name
-                    ]}
-                  />
-                  <Legend />
-                  <Bar dataKey="revenue" fill="#059669" name="Revenue" />
-                  <Bar dataKey="spend" fill="#DC2626" name="Spend" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          )}
+            {!loading && devicePerformance.length > 0 && (
+              <div className="bg-gray-800 rounded-lg p-6 shadow-lg my-5">
+                <h2 className="text-2xl font-semibold mb-6 text-center text-white">
+                  Revenue vs Spend by Device
+                </h2>
+                <ResponsiveContainer width="100%" height={400}>
+                  <BarChart data={devicePerformance} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                    <XAxis dataKey="device" stroke="#fff" />
+                    <YAxis stroke="#fff" />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: '#1f2937', 
+                        border: '1px solid #374151',
+                        borderRadius: '8px',
+                        color: '#fff'
+                      }}
+                      formatter={(value: any, name: string) => [
+                        `$${typeof value === 'number' ? value.toLocaleString() : value}`,
+                        name
+                      ]}
+                    />
+                    <Legend />
+                    <Bar dataKey="revenue" fill="#059669" name="Revenue" />
+                    <Bar dataKey="spend" fill="#DC2626" name="Spend" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            )}
 
           {/* Performance Metrics Chart */}
-          {!loading && devicePerformance.length > 0 && (
-            <div className="bg-gray-800 rounded-lg p-6 shadow-lg">
-              <h2 className="text-2xl font-semibold mb-6 text-center text-white">
-                Performance Metrics by Device
-              </h2>
-              <ResponsiveContainer width="100%" height={400}>
-                <BarChart data={devicePerformance} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                  <XAxis dataKey="device" stroke="#fff" />
-                  <YAxis stroke="#fff" />
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: '#1f2937', 
-                      border: '1px solid #374151',
-                      borderRadius: '8px',
-                      color: '#fff'
-                    }}
-                    formatter={(value: any, name: string) => [
-                      `${typeof value === 'number' ? value.toFixed(2) : value}%`,
-                      name
-                    ]}
-                  />
-                  <Legend />
-                  <Bar dataKey="ctr" fill="#8B5CF6" name="CTR (%)" />
-                  <Bar dataKey="conversion_rate" fill="#EC4899" name="Conversion Rate (%)" />
-                  <Bar dataKey="percentage_of_traffic" fill="#06B6D4" name="Traffic Share (%)" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          )}
+            {!loading && devicePerformance.length > 0 && (
+              <div className="bg-gray-800 rounded-lg p-6 shadow-lg my-5">
+                <h2 className="text-2xl font-semibold mb-6 text-center text-white">
+                  Performance Metrics by Device
+                </h2>
+                <ResponsiveContainer width="100%" height={400}>
+                  <BarChart data={devicePerformance} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                    <XAxis dataKey="device" stroke="#fff" />
+                    <YAxis stroke="#fff" />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: '#1f2937', 
+                        border: '1px solid #374151',
+                        borderRadius: '8px',
+                        color: '#fff'
+                      }}
+                      formatter={(value: any, name: string) => [
+                        `${typeof value === 'number' ? value.toFixed(2) : value}%`,
+                        name
+                      ]}
+                    />
+                    <Legend />
+                    <Bar dataKey="ctr" fill="#8B5CF6" name="CTR (%)" />
+                    <Bar dataKey="conversion_rate" fill="#EC4899" name="Conversion Rate (%)" />
+                    <Bar dataKey="percentage_of_traffic" fill="#06B6D4" name="Traffic Share (%)" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            )}
 
           {/* No Data Message */}
-          {!loading && devicePerformance.length === 0 && (
-            <div className="bg-gray-800 rounded-lg p-6 shadow-lg text-center">
-              <p className="text-gray-400 text-lg">No device performance data available.</p>
-            </div>
-          )}
+            {!loading && devicePerformance.length === 0 && (
+              <div className="bg-gray-800 rounded-lg p-6 shadow-lg text-center">
+                <p className="text-gray-400 text-lg">No device performance data available.</p>
+              </div>
+            )}
         </main>
+
         <Footer />
       </div>
     </div>
